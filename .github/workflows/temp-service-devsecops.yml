@@ -137,14 +137,14 @@ jobs:
           name: image-candidate
           path: /tmp
       - name: trivy, table for the log
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           input: /tmp/image.tar
           format: table
           severity: HIGH,CRITICAL
           ignore-unfixed: true
       - name: trivy, JSON for the gate
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           input: /tmp/image.tar
           format: json
