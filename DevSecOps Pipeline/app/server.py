@@ -55,4 +55,6 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")))  # nosec B104
+    # Local development only. In the container gunicorn serves the app and owns the bind
+    # address, so the dev server stays on loopback (Semgrep flagged 0.0.0.0 here in CI).
+    app.run(host="127.0.0.1", port=int(os.environ.get("PORT", "5000")))
