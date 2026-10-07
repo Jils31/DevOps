@@ -21,8 +21,12 @@ README with the commands that were run, the output, and screenshots from the run
 | `Helm/` | Helm command tour, upgrade and rollback cycle, a chart with dev and prod value files |
 | `CI-CD Pipeline/` | GitHub Actions: lint, matrix tests, image publish to GHCR, smoke test of the published image |
 | `DevSecOps Pipeline/` | Build, test, SAST, SCA, secret scan, image scan, security gate, push, deploy to kind |
+| `Terraform Basics/` | Infrastructure as code with Terraform, an S3 project run end to end, notes on IAM, EC2, S3, VPC, DynamoDB and RDS |
+| `Cloud Terraform/` | Cloud fundamentals and a Terraform VPC project: subnets, gateway, routes, security group, optional EC2 |
+| `Issue Tracker Compose/` | FastAPI + React + PostgreSQL issue tracker with Dockerfiles and Docker Compose, run manually and with compose |
 | `Monitoring Observability GitOps/` | Prometheus and Grafana stack with alerts, the three observability signals on Kubernetes, Argo CD GitOps demo |
 
 Environment: macOS with Docker Desktop; Linux-only commands were run in Ubuntu 24.04 containers.
 The Kubernetes work used Minikube with the Docker driver. The two pipelines run on GitHub Actions;
-their workflow files are in `.github/workflows/`.
+their workflow files are in `.github/workflows/`. The Terraform projects ran against LocalStack and
+switch to real AWS with one variable.
