@@ -24,4 +24,5 @@ spec:
   ignoreDifferences:
     - group: apps
       kind: Deployment
+      name: tracker-backend
       jsonPointers: [/spec/replicas]
