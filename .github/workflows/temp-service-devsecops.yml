@@ -246,6 +246,12 @@ jobs:
           kubectl apply -f k8s/service.yaml
           kubectl rollout status deploy/temp-service --timeout=180s
           kubectl get pods,svc -o wide
+      - name: diagnostics if the rollout failed
+        if: failure()
+        run: |
+          kubectl get pods -o wide
+          kubectl describe pods -l app=temp-service | sed -n '/^Events/,$p'
+          kubectl logs -l app=temp-service --tail=50 || true
       - name: smoke test through the Service
         run: |
           kubectl run smoke --rm -i --restart=Never --image=curlimages/curl:8.10.1 -- \
