@@ -42,3 +42,18 @@ def test_stats(client):
     assert s["total"] == 3
     assert s["by_status"] == {"open": 1, "in_progress": 1, "done": 1}
     assert s["open_high_priority"] == 1
+
+
+def _metric(body, name):
+    line = next(l for l in body.splitlines() if l.startswith(name + " "))
+    return float(line.split()[-1])
+
+
+def test_metrics_endpoint_counts_requests(client):
+    before = _metric(client.get("/metrics").text, "tracker_issues_created_total")
+    client.get("/health")
+    client.post("/api/issues", json={"title": "metrics"})
+    body = client.get("/metrics").text
+    assert 'tracker_http_requests_total{method="GET",route="/health",status="200"}' in body
+    assert _metric(body, "tracker_issues_created_total") == before + 1
+    assert "tracker_http_request_duration_seconds_bucket" in body

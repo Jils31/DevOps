@@ -4,11 +4,12 @@ from fastapi import Depends, FastAPI, HTTPException, Response, status
 from sqlalchemy import func, select, text
 from sqlalchemy.orm import Session
 
-from app import models, schemas
+from app import metrics, models, schemas
 from app.config import settings
 from app.db import get_db
 
 app = FastAPI(title="Issue Tracker API", version=settings.app_version)
+metrics.install(app)
 
 
 @app.get("/")
@@ -69,6 +70,7 @@ def create_issue(payload: schemas.IssueIn, db: Session = Depends(get_db)):
     db.add(issue)
     db.commit()
     db.refresh(issue)
+    metrics.ISSUES_CREATED.inc()
     return issue
 
 
