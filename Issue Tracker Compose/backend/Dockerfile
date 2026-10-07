@@ -4,6 +4,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 FROM python:3.12-slim
+# apply Debian security updates so the image scan reflects fixes already published
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 WORKDIR /srv
 COPY --from=deps /install /usr/local
 COPY app ./app
