@@ -9,8 +9,9 @@ WORKDIR /srv
 COPY --from=base /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=base /usr/local/bin/gunicorn /usr/local/bin/gunicorn
 COPY app ./app
-RUN addgroup -S web && adduser -S -G web web
-USER web
+# fixed numeric UID so Kubernetes can verify runAsNonRoot without guessing
+RUN addgroup -S -g 10001 web && adduser -S -u 10001 -G web web
+USER 10001:10001
 ARG APP_VERSION=dev
 ENV APP_VERSION=$APP_VERSION PORT=5000
 EXPOSE 5000
