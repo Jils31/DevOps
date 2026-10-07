@@ -82,18 +82,30 @@ commit history.
 4. **The kind deploy timed out.** Reproduced locally with `docker run --read-only`: gunicorn
    needs a writable temp directory and the Pod's root filesystem is read-only, as it should
    be. Fixed with an in-memory `emptyDir` at `/tmp`, keeping the read-only root.
+5. **The kind deploy failed again** with `container has runAsNonRoot and image has non-numeric
+   user (web)`. The kubelet cannot prove a named user is non-root without the image's
+   `/etc/passwd`, so the Dockerfile now creates the user with UID 10001 and the Pod sets
+   `runAsUser: 10001`. The diagnostics step added in the previous fix is what surfaced this.
 
 ## Final run
 
-Run RUN_ID on commit RUN_SHA:
+Run [37602023421](https://github.com/Jils31/DevOps/actions/runs/37602023421) on commit `e917649`:
 
 ```
-RUN_JOBS
+1. build and unit test: success
+2. SAST (bandit + semgrep): success
+4. secret scan (gitleaks): success
+3. SCA (pip-audit): success
+5. docker build: success
+6. container image scan (trivy): success
+7. security gate: success
+8. push image to GHCR: success
+9. deploy to kubernetes (kind): success
 ```
 
 Trivy found no fixable HIGH or CRITICAL vulnerabilities in `python:3.12-alpine` plus Flask and
 gunicorn. gitleaks found no secrets across the repository history. The pushed image is
-`ghcr.io/jils31/temp-service:RUN_SHA`. In the kind cluster both replicas reached `Running`,
+`ghcr.io/jils31/temp-service:e917649`. In the kind cluster both replicas reached `Running`,
 `/health` returned `ok` and `/api/convert` converted 100 C to 212 F.
 
 ![Actions run](screenshots/actions-run.png)
