@@ -165,6 +165,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: reports
+          pattern: "*-report*"      # only the scanner reports, not the image tarball
       - name: fail on any HIGH or CRITICAL finding from any scanner
         working-directory: .
         run: |
